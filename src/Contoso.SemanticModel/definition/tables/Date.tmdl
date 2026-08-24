@@ -1,0 +1,170 @@
+table Date
+	lineageTag: aa35de10-4ca1-4d50-830a-65f05c5ddd9a
+	dataCategory: Time
+
+	column Date
+		dataType: dateTime
+		isKey
+		formatString: mm/dd/yyyy
+		lineageTag: 1b362a51-412e-474b-b508-e4298c045ae9
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: 47b45c39-3e03-42b3-8bb1-c16b93fcbfc8
+		summarizeBy: none
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quarter
+		dataType: string
+		lineageTag: 432ac6f7-8578-4239-8398-f1e4072c36f8
+		summarizeBy: none
+		sourceColumn: Quarter
+
+		annotation SummarizationSetBy = Automatic
+
+	column Month
+		dataType: string
+		lineageTag: bdc6753f-466f-4ef9-ad8d-8a64cf51f2b0
+		summarizeBy: none
+		sourceColumn: Month
+		sortByColumn: 'Month Number'
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Year Quarter'
+		dataType: string
+		lineageTag: 3e25554f-9077-4a95-85e3-353a9d0deacb
+		summarizeBy: none
+		sourceColumn: Year Quarter
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Year Quarter Number'
+		dataType: int64
+		formatString: 0
+		lineageTag: 618b732b-be8f-421f-b3a2-863886061e79
+		summarizeBy: none
+		sourceColumn: Year Quarter Number
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Year Month'
+		dataType: string
+		lineageTag: 4f807d97-7b93-48ab-be21-df9f51ce4b57
+		summarizeBy: none
+		sourceColumn: Year Month
+		sortByColumn: 'Year Month Number'
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Year Month Short'
+		dataType: string
+		lineageTag: a2b1298f-1689-424d-85d9-1ec25f2cba5a
+		summarizeBy: none
+		sourceColumn: Year Month Short
+		sortByColumn: 'Year Month Number'
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Year Month Number'
+		dataType: int64
+		formatString: 0
+		lineageTag: b6a53bd0-5853-4fdb-870e-d2f74d804ae8
+		summarizeBy: none
+		sourceColumn: Year Month Number
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Short'
+		dataType: string
+		lineageTag: 55f469a5-cc4d-4bc8-bfc7-5d9963100238
+		summarizeBy: none
+		sourceColumn: Month Short
+		sortByColumn: 'Month Number'
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Number'
+		dataType: int64
+		formatString: 0
+		lineageTag: 4bc55e07-3889-4df5-81d2-cdadd0e293e6
+		summarizeBy: none
+		sourceColumn: Month Number
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Day of Week'
+		dataType: string
+		lineageTag: aea6db1e-7c3c-47cd-bcc4-41ea55872549
+		summarizeBy: none
+		sourceColumn: Day of Week
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Day of Week Short'
+		dataType: string
+		lineageTag: b429b7ec-a7cd-4fec-995a-b9750940a9db
+		summarizeBy: none
+		sourceColumn: Day of Week Short
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Day of Week Number'
+		dataType: int64
+		formatString: 0
+		lineageTag: 4dd0766b-c8f6-4b9c-a2d8-8893001ba26b
+		summarizeBy: none
+		sourceColumn: Day of Week Number
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Working Day'
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: ca781518-36fa-48f6-a65b-78089dc2707a
+		summarizeBy: none
+		sourceColumn: Working Day
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Working Day Number'
+		dataType: int64
+		formatString: 0
+		lineageTag: 01009aec-1b77-4743-9e17-825491e255ab
+		summarizeBy: none
+		sourceColumn: Working Day Number
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Date = m
+		mode: import
+		queryGroup: dim
+		source =
+				let
+				    Source = Sql.Databases(Server),
+				    Contoso10M = Source{[Name=Database]}[Data],
+				    dbo_Date = Contoso10M{[Schema=Schema,Item="Date"]}[Data]
+				in
+				    dbo_Date
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

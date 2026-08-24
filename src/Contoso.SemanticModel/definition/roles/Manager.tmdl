@@ -1,0 +1,5 @@
+role Manager
+	modelPermission: administrator
+
+	annotation PBI_Id = 8c567530ef8b4972a15c4542b406c556
+
