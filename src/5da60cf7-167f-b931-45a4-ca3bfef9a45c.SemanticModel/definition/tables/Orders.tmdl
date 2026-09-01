@@ -1,7 +1,7 @@
 table Orders
 	lineageTag: 6b28de0a-35cf-408c-a0af-6a04151d8e48
 
-	/// Counts distinct order numbers in the current filter context.
+	/// Counts distinct order numbers in the Orders table for the current filter context.
 	measure 'Total Orders' = DISTINCTCOUNT ( 'Orders'[Order Number] )
 		formatString: #,0
 		displayFolder: Measures
