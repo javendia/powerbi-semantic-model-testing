@@ -26,8 +26,6 @@ annotation __TEdtr = 1
 
 annotation PBI_ProTooling = ["WebModelingEdit","SLL","DevMode","TMDLView_Desktop","DaxQueryView_Desktop","MCP-PBIModeling"]
 
-annotation __LastRPTime = 134082062467366725
-
 annotation BestPracticeAnalyzer_IgnoreRules = {"RuleIDs":["OBJECTS_WITH_NO_DESCRIPTION"]}
 
 ref table Customer

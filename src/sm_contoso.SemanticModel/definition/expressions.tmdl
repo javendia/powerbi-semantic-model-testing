@@ -1,4 +1,4 @@
-expression Server = "hvdzxw4sd3hu5bug4a3lx2hrqm-shi46a3oswneradmj6xz4xfr4u.datawarehouse.fabric.microsoft.com" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+expression Server = "hvdzxw4sd3hu5bug4a3lx2hrqm-lywwrbmo7uwebazj6fbrbdhm4u.datawarehouse.fabric.microsoft.com" meta [IsParameterQuery = true, IsParameterQueryRequired = true, Type = "Text"]
 	lineageTag: d7b5355d-7770-4906-83c1-e4731ac3112e
 	queryGroup: Parameters
 
@@ -6,7 +6,7 @@ expression Server = "hvdzxw4sd3hu5bug4a3lx2hrqm-shi46a3oswneradmj6xz4xfr4u.dataw
 
 	annotation PBI_ResultType = Text
 
-expression Database = "WH_TR_DATA_WAREHOUSE" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+expression Database = "wh_data_warehouse" meta [IsParameterQuery = true, IsParameterQueryRequired = true, Type = "Text"]
 	lineageTag: 45b1c374-fd9f-4ce3-bec8-e909f1a9345f
 	queryGroup: Parameters
 
@@ -14,7 +14,7 @@ expression Database = "WH_TR_DATA_WAREHOUSE" meta [IsParameterQuery=true, Type="
 
 	annotation PBI_ResultType = Text
 
-expression Schema = "dwh" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+expression Schema = "contoso" meta [IsParameterQuery = true, IsParameterQueryRequired = true, Type = "Text"]
 	lineageTag: 3b8f31e3-c077-4a03-a0f6-2fcaaca9dc3d
 	queryGroup: Parameters
 
