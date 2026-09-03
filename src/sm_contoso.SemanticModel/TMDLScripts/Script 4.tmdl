@@ -1,0 +1,14 @@
+createOrReplace
+
+	function 'Measures.ANY.Tests' =
+			(
+					sqlResult : DECIMAL,
+					measureRef : MEASUREREF
+				) =>
+					PQL.Assert.ShouldEqual(
+						NAMEOF(measureRef, SELF, UNESCAPED) & " matches the data source",
+						sqlResult,
+						measureRef
+					)
+		lineageTag: bb9cdd20-1df7-40fd-b149-83cce8a22fc4
+
