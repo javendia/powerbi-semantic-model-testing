@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "sm_contoso"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "104318a3-b8be-48ac-b256-3de06e40d936"
+  }
+}

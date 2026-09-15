@@ -1,0 +1,8 @@
+DEFINE
+    FUNCTION ANY.AllTests = () =>
+	UNION (
+		DataQuality.ANY.Tests('Customer'[CustomerKey]),
+		DataQuality.DEV.Tests()
+	)
+
+EVALUATE Relationships.ANY.Tests()

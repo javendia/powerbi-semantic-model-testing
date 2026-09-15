@@ -1,0 +1,12 @@
+createOrReplace
+
+	function 'DataQuality.ANY.Tests' =
+			(
+					columnRef : COLUMNREF
+				) =>
+					PQL.Assert.Col.ShouldBeDistinct(
+						"Verify " & NAMEOF(columnRef, SELF, UNESCAPED) & "  is distinct",
+						columnRef
+					)
+		lineageTag: 716bbada-47e2-4ec6-a002-5916e89e11ff
+

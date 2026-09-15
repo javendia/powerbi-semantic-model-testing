@@ -1,0 +1,268 @@
+table Sales
+	lineageTag: 87e290a9-0694-4e06-9ec8-d9206202f98d
+
+	/// Calculates gross sales amount by summing line-level Quantity multiplied by Unit Price.
+	measure 'Total Sales' = SUMX ( 'Sales', 'Sales'[Quantity] * 'Sales'[Unit Price] )
+		formatString: #,0.00\ "€";-#,0.00\ "€";#,0.00\ "€"
+		displayFolder: Measures
+		lineageTag: 0fff0219-0e4e-4cf1-b771-81f8db8e2204
+
+	/// Calculates total cost by summing line-level Quantity multiplied by Unit Cost.
+	measure 'Total Cost' = SUMX ( 'Sales', 'Sales'[Quantity] * Sales[Unit Cost] )
+		formatString: #,0\ "€";-#,0\ "€";#,0\ "€"
+		displayFolder: Measures
+		lineageTag: c2b1cdd2-9e9c-43b0-8f06-e2c3a138416c
+
+	/// Calculates cumulative sales from the start of the year up to the current visible date.
+	measure 'YTD Sales' = CALCULATE ( [Total Sales], DATESYTD ( 'Date'[Date] ) )
+		formatString: #,0.00\ "€";-#,0.00\ "€";#,0.00\ "€"
+		displayFolder: Measures
+		lineageTag: 1e6ff052-1815-490b-b2c2-2077d9333683
+
+	/// Calculates absolute margin as Total Sales minus Total Cost.
+	measure 'Total Profit' = [Total Sales] - [Total Cost]
+		formatString: #,0.00\ "€";-#,0.00\ "€";#,0.00\ "€"
+		displayFolder: Measures
+		lineageTag: 7f48ada6-06b2-44b4-9c6e-3ed2e015576b
+
+	/// Calculates sales amount for products with Color equal to Red, preserving other active filters.
+	measure 'Red Sales' = CALCULATE ( [Total Sales], KEEPFILTERS ( 'Product'[Color] = "Red" ) )
+		formatString: #,0.00\ "€";-#,0.00\ "€";#,0.00\ "€"
+		displayFolder: Measures
+		lineageTag: 14dae3eb-f968-497f-adfe-ba39df837582
+
+	/// Counts distinct customers that have at least one sales record in the current context.
+	measure 'Total Customers With Sales' = COUNTROWS ( SUMMARIZE ( 'Sales', Customer[CustomerKey] ) )
+		formatString: #,0
+		displayFolder: Measures
+		lineageTag: e91cdec8-0ef3-4a25-8704-3763d903c4d7
+
+	/// Calculates sales over the 10-day rolling window ending on the current visible date.
+	measure '10-Day Rolling Sales' =
+			CALCULATE (
+			    [Total Sales],
+			    DATESINPERIOD ( 'Date'[Date], MAX ( 'Date'[Date] ), -10, DAY )
+			)
+		formatString: #,0.00\ "€";-#,0.00\ "€";#,0.00\ "€"
+		displayFolder: Measures
+		lineageTag: 06e9ac80-1da4-444a-8854-724855358e8e
+
+	/// Sums total units sold in the current filter context.
+	measure 'Quantity Sold' = SUM ( 'Sales'[Quantity] )
+		formatString: 0
+		displayFolder: Measures
+		lineageTag: 86f5c122-c69f-44fc-a97a-01afb51b76f6
+
+	/// Calculates sales over the 90-day rolling window ending on the current visible date.
+	measure '90-Day Rolling Sales' =
+			CALCULATE (
+			    [Total Sales],
+			    DATESINPERIOD ( 'Date'[Date], MAX ( 'Date'[Date] ), -90, DAY )
+			)
+		formatString: #,0.00\ "€";-#,0.00\ "€";#,0.00\ "€"
+		displayFolder: Measures
+		lineageTag: 2f73c521-70f3-4e9d-8515-296b07fb1ebf
+
+	/// Calculates Red-product sales over the 10-day rolling window ending on the current visible date.
+	measure '10-Day Rolling Red Sales' =
+			CALCULATE (
+			    [Red Sales],
+			    DATESINPERIOD ( 'Date'[Date], MAX ( 'Date'[Date] ), -10, DAY )
+			)
+		formatString: #,0.00\ "€";-#,0.00\ "€";#,0.00\ "€"
+		displayFolder: Measures
+		lineageTag: 5d10b1c0-aae6-430d-9bd6-3f31d9de07b4
+
+	/// Calculates Red-product sales over the 90-day rolling window ending on the current visible date.
+	measure '90-Day Rolling Red Sales' =
+			CALCULATE (
+			    [Red Sales],
+			    DATESINPERIOD ( 'Date'[Date], MAX ( 'Date'[Date] ), -90, DAY )
+			)
+		formatString: #,0.00\ "€";-#,0.00\ "€";#,0.00\ "€"
+		displayFolder: Measures
+		lineageTag: 01c27c6e-3b4d-4b02-9b98-0b0a4e934587
+
+	/// Calculates sales amount for products in the Audio category.
+	measure 'Audio Products Sold' = CALCULATE ( [Total Sales], 'Product'[Category] = "Audio" )
+		formatString: #,0.00\ "€";-#,0.00\ "€";#,0.00\ "€"
+		displayFolder: Measures
+		lineageTag: 2ea6ac99-5819-49b1-a9f9-abe7abee0a00
+
+	/// Calculates average sales per customer as Total Sales divided by Total Customers using safe division.
+	measure 'Sales Per Customer' = DIVIDE ( [Total Sales], [Total Customers] )
+		formatString: #,0.###############\ "€";-#,0.###############\ "€";#,0.###############\ "€"
+		displayFolder: Measures
+		lineageTag: dd3d7619-b182-41d1-9e8a-e866f08d994c
+
+		annotation PBI_FormatHint = {"currencyCulture":"es-ES"}
+
+	/// Calculates sales for products whose color is Blue, White, or Red.
+	measure 'Trendy Sales' = CALCULATE ( [Total Sales], 'Product'[Color] IN { "Blue", "White", "Red" } )
+		formatString: #,0.00\ "€";-#,0.00\ "€";#,0.00\ "€"
+		displayFolder: Measures
+		lineageTag: f277aef0-7b22-4e95-b65b-9f4f220a0e05
+
+	/// Running total of units sold for red products up to the current visible date.
+	measure 'Cumulative Red Quantity Sold' =
+			CALCULATE (
+			    [Quantity Sold],
+			    KEEPFILTERS ( 'Product'[Color] = "Red" ),
+			    FILTER ( ALL ( 'Date'[Date] ), 'Date'[Date] <= MAX ( 'Date'[Date] ) )
+			)
+		formatString: 0
+		displayFolder: Measures
+		lineageTag: 3bb5ea3b-a328-475c-8218-e1ea074f5415
+
+	column 'Order Number'
+		dataType: int64
+		formatString: 0
+		lineageTag: 4024cddd-cdd2-470f-84fa-9fdc22e7b516
+		summarizeBy: none
+		sourceColumn: Order Number
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Line Number'
+		dataType: int64
+		formatString: 0
+		lineageTag: 3ee007a0-1ad9-4764-8115-247a3ad3d63d
+		summarizeBy: none
+		sourceColumn: Line Number
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Order Date'
+		dataType: dateTime
+		isHidden
+		formatString: mm/dd/yyyy
+		isAvailableInMdx: false
+		lineageTag: 4f3ab903-cf51-456c-bd17-f892975c41c0
+		summarizeBy: none
+		sourceColumn: Order Date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Delivery Date'
+		dataType: dateTime
+		formatString: mm/dd/yyyy
+		lineageTag: 7bd6d815-9926-485b-8746-112635c3ebbe
+		summarizeBy: none
+		sourceColumn: Delivery Date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column CustomerKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		isAvailableInMdx: false
+		lineageTag: 447784c9-3664-41df-af66-85a1548ad965
+		summarizeBy: none
+		sourceColumn: CustomerKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column StoreKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		isAvailableInMdx: false
+		lineageTag: b1cbfd37-1811-4f16-ba39-d64caf0ece56
+		summarizeBy: none
+		sourceColumn: StoreKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column ProductKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		isAvailableInMdx: false
+		lineageTag: d6cbb68e-c1d8-4a48-8680-515b2bd0cadf
+		summarizeBy: none
+		sourceColumn: ProductKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quantity
+		dataType: int64
+		isHidden
+		formatString: 0
+		isAvailableInMdx: false
+		lineageTag: adecb326-4341-469f-bc44-cc170a4edf2d
+		summarizeBy: none
+		sourceColumn: Quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Unit Price'
+		dataType: decimal
+		formatString: #,0.###############\ "€";-#,0.###############\ "€";#,0.###############\ "€"
+		lineageTag: 4ea488a2-4838-4849-95cf-60aa92dca516
+		summarizeBy: none
+		sourceColumn: Unit Price
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"es-ES"}
+
+	column 'Net Price'
+		dataType: decimal
+		formatString: #,0.###############\ "€";-#,0.###############\ "€";#,0.###############\ "€"
+		lineageTag: 56457bcf-1d4a-4dc0-92fd-09ec9b1a9b91
+		summarizeBy: none
+		sourceColumn: Net Price
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"es-ES"}
+
+	column 'Unit Cost'
+		dataType: decimal
+		formatString: #,0.###############\ "€";-#,0.###############\ "€";#,0.###############\ "€"
+		lineageTag: 055db25b-32ea-4571-afd1-0f86f1f247b0
+		summarizeBy: none
+		sourceColumn: Unit Cost
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"es-ES"}
+
+	column 'Currency Code'
+		dataType: string
+		lineageTag: 4bf267b8-6e94-4ef1-a0dc-ce2b1095a587
+		summarizeBy: none
+		sourceColumn: Currency Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Exchange Rate'
+		dataType: decimal
+		lineageTag: 09958049-d953-4497-b0a4-67c40aa70066
+		summarizeBy: none
+		sourceColumn: Exchange Rate
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition Sales = m
+		mode: import
+		queryGroup: fact
+		source =
+				let
+				    Source = Sql.Databases(Server),
+				    Contoso10M = Source{[Name=Database]}[Data],
+				    dbo_Sales = Contoso10M{[Schema=Schema,Item="Sales"]}[Data]
+				in
+				    dbo_Sales
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,11 @@
+createOrReplace
+
+	function 'Security.ANY.Tests' =
+			() =>
+			    UNION(
+			        PQL.Assert.OLS.TableShouldBeHidden("Sales table should be hidden", "Sales"),
+			        PQL.Assert.OLS.ColumnShouldBeHidden("Unit Cost should be hidden", "Product", "Unit Cost"),
+					PQL.Assert.OLS.ColumnShouldBeHidden("Unit Price should be hidden", "Product", "Unit Price")
+			    )
+		lineageTag: 3873c6e1-c3ce-444e-bdc4-612786ff4f55
+

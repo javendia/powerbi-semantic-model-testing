@@ -1,0 +1,2 @@
+EVALUATE
+        Measures.ANY.Tests(0, [Total Sales])

@@ -1,0 +1,10 @@
+DEFINE
+    FUNCTION DataQuality.ANY.Tests = () =>
+		UNION(
+			PQL.Assert.Col.ShouldBeDistinct("Verify 'Customer'[CustomerKey] is distinct", 'Customer'[CustomerKey]),
+			PQL.Assert.Col.ShouldBeDistinct("Verify 'Date'[Date] is distinct", 'Date'[Date]),
+			PQL.Assert.Col.ShouldBeDistinct("Verify 'Product'[ProductKey] is distinct", 'Product'[ProductKey]),
+			PQL.Assert.Col.ShouldBeDistinct("Verify 'Store'[StoreKey] is distinct", 'Store'[StoreKey])
+		)
+
+EVALUATE DataQuality.ANY.Tests()

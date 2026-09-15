@@ -1,0 +1,103 @@
+table Store
+	lineageTag: 39b95888-7648-4d22-bdc4-404ac7795a73
+
+	column StoreKey
+		dataType: int64
+		isHidden
+		isKey
+		formatString: 0
+		isAvailableInMdx: false
+		lineageTag: aff65ac0-7ca6-4858-9246-2d37b656f5d8
+		summarizeBy: none
+		sourceColumn: StoreKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column Country
+		dataType: string
+		lineageTag: 59cd186c-a901-48bb-bef6-929ce1ff3624
+		dataCategory: Country
+		summarizeBy: none
+		sourceColumn: Country
+
+		annotation SummarizationSetBy = Automatic
+
+	column State
+		dataType: string
+		lineageTag: 3ebb20bb-ac22-490c-9d69-78faf8e98c3d
+		summarizeBy: none
+		sourceColumn: State
+
+		annotation SummarizationSetBy = Automatic
+
+	column Name
+		dataType: string
+		lineageTag: 348b1b70-c568-48f6-989b-0206922bf088
+		summarizeBy: none
+		sourceColumn: Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column Status
+		dataType: string
+		lineageTag: f0e8128d-57f6-4419-a9d9-ed4e1055fa0f
+		summarizeBy: none
+		sourceColumn: Status
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Store Code'
+		dataType: int64
+		formatString: 0
+		lineageTag: f299111c-d471-4183-95ee-5fd2f01b3e38
+		summarizeBy: none
+		sourceColumn: Store Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Square Meters'
+		dataType: int64
+		formatString: 0
+		lineageTag: 1f6fa05b-13ad-4062-891d-fdf0a0f15f70
+		summarizeBy: none
+		sourceColumn: Square Meters
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Open Date'
+		dataType: dateTime
+		formatString: mm/dd/yyyy
+		lineageTag: 7257281b-5e8e-43ea-ac6f-74a38ae0c064
+		summarizeBy: none
+		sourceColumn: Open Date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Close Date'
+		dataType: dateTime
+		formatString: mm/dd/yyyy
+		lineageTag: 62acbe7e-34a7-460f-bc49-1fb16378d459
+		summarizeBy: none
+		sourceColumn: Close Date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	partition Store = m
+		mode: import
+		queryGroup: dim
+		source =
+				let
+				    Source = Sql.Databases(Server),
+				    Contoso10M = Source{[Name=Database]}[Data],
+				    dbo_Store = Contoso10M{[Schema=Schema,Item="Store"]}[Data]
+				in
+				    dbo_Store
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+
