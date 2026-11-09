@@ -3440,16 +3440,23 @@ function 'PQL.Assert.Tbl.ColumnDataTypeShouldBe' =
 
 	annotation DAXLIB_PackageVersion = 0.5.0
 
-function 'Measures.ANY.Tests' =
+function 'Measures.ANY.Tests' = ```
 		(
 				sqlResult : DECIMAL,
+				measureName : STRING,
 				measureRef : MEASUREREF
 			) =>
+			
+				VAR _actual = measureRef
+				VAR _actualRounded = 
+					IF(ISNUMBER(_actual), ROUND(_actual, 4), _actual)
+				RETURN
 				PQL.Assert.ShouldEqual(
-					NAMEOF(measureRef, SELF, UNESCAPED) & " matches the data source",
+					measureName & " matches the data source",
 					sqlResult,
-					measureRef
+					_actualRounded
 				)
+		```
 	lineageTag: bb9cdd20-1df7-40fd-b149-83cce8a22fc4
 
 function 'DataQuality.ANY.Tests' =

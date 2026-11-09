@@ -3,31 +3,31 @@ table Sales
 
 	/// Calculates gross sales amount by summing line-level Quantity multiplied by Unit Price.
 	measure 'Total Sales' = SUMX ( 'Sales', 'Sales'[Quantity] * 'Sales'[Unit Price] )
-		formatString: #,0.00\ "€";-#,0.00\ "€";#,0.00\ "€"
+		formatString: #,0
 		displayFolder: Measures
 		lineageTag: 0fff0219-0e4e-4cf1-b771-81f8db8e2204
 
 	/// Calculates total cost by summing line-level Quantity multiplied by Unit Cost.
 	measure 'Total Cost' = SUMX ( 'Sales', 'Sales'[Quantity] * Sales[Unit Cost] )
-		formatString: #,0\ "€";-#,0\ "€";#,0\ "€"
+		formatString: #,0
 		displayFolder: Measures
 		lineageTag: c2b1cdd2-9e9c-43b0-8f06-e2c3a138416c
 
 	/// Calculates cumulative sales from the start of the year up to the current visible date.
 	measure 'YTD Sales' = CALCULATE ( [Total Sales], DATESYTD ( 'Date'[Date] ) )
-		formatString: #,0.00\ "€";-#,0.00\ "€";#,0.00\ "€"
+		formatString: #,0
 		displayFolder: Measures
 		lineageTag: 1e6ff052-1815-490b-b2c2-2077d9333683
 
 	/// Calculates absolute margin as Total Sales minus Total Cost.
 	measure 'Total Profit' = [Total Sales] - [Total Cost]
-		formatString: #,0.00\ "€";-#,0.00\ "€";#,0.00\ "€"
+		formatString: #,0
 		displayFolder: Measures
 		lineageTag: 7f48ada6-06b2-44b4-9c6e-3ed2e015576b
 
 	/// Calculates sales amount for products with Color equal to Red, preserving other active filters.
 	measure 'Red Sales' = CALCULATE ( [Total Sales], KEEPFILTERS ( 'Product'[Color] = "Red" ) )
-		formatString: #,0.00\ "€";-#,0.00\ "€";#,0.00\ "€"
+		formatString: #,0
 		displayFolder: Measures
 		lineageTag: 14dae3eb-f968-497f-adfe-ba39df837582
 
@@ -43,13 +43,13 @@ table Sales
 			    [Total Sales],
 			    DATESINPERIOD ( 'Date'[Date], MAX ( 'Date'[Date] ), -10, DAY )
 			)
-		formatString: #,0.00\ "€";-#,0.00\ "€";#,0.00\ "€"
+		formatString: #,0
 		displayFolder: Measures
 		lineageTag: 06e9ac80-1da4-444a-8854-724855358e8e
 
 	/// Sums total units sold in the current filter context.
 	measure 'Quantity Sold' = SUM ( 'Sales'[Quantity] )
-		formatString: 0
+		formatString: #,0
 		displayFolder: Measures
 		lineageTag: 86f5c122-c69f-44fc-a97a-01afb51b76f6
 
@@ -59,7 +59,7 @@ table Sales
 			    [Total Sales],
 			    DATESINPERIOD ( 'Date'[Date], MAX ( 'Date'[Date] ), -90, DAY )
 			)
-		formatString: #,0.00\ "€";-#,0.00\ "€";#,0.00\ "€"
+		formatString: #,0
 		displayFolder: Measures
 		lineageTag: 2f73c521-70f3-4e9d-8515-296b07fb1ebf
 
@@ -69,7 +69,7 @@ table Sales
 			    [Red Sales],
 			    DATESINPERIOD ( 'Date'[Date], MAX ( 'Date'[Date] ), -10, DAY )
 			)
-		formatString: #,0.00\ "€";-#,0.00\ "€";#,0.00\ "€"
+		formatString: #,0
 		displayFolder: Measures
 		lineageTag: 5d10b1c0-aae6-430d-9bd6-3f31d9de07b4
 
@@ -79,19 +79,19 @@ table Sales
 			    [Red Sales],
 			    DATESINPERIOD ( 'Date'[Date], MAX ( 'Date'[Date] ), -90, DAY )
 			)
-		formatString: #,0.00\ "€";-#,0.00\ "€";#,0.00\ "€"
+		formatString: #,0
 		displayFolder: Measures
 		lineageTag: 01c27c6e-3b4d-4b02-9b98-0b0a4e934587
 
 	/// Calculates sales amount for products in the Audio category.
 	measure 'Audio Products Sold' = CALCULATE ( [Total Sales], 'Product'[Category] = "Audio" )
-		formatString: #,0.00\ "€";-#,0.00\ "€";#,0.00\ "€"
+		formatString: #,0
 		displayFolder: Measures
 		lineageTag: 2ea6ac99-5819-49b1-a9f9-abe7abee0a00
 
 	/// Calculates average sales per customer as Total Sales divided by Total Customers using safe division.
 	measure 'Sales Per Customer' = DIVIDE ( [Total Sales], [Total Customers] )
-		formatString: #,0.###############\ "€";-#,0.###############\ "€";#,0.###############\ "€"
+		formatString: #,0
 		displayFolder: Measures
 		lineageTag: dd3d7619-b182-41d1-9e8a-e866f08d994c
 
@@ -99,7 +99,7 @@ table Sales
 
 	/// Calculates sales for products whose color is Blue, White, or Red.
 	measure 'Trendy Sales' = CALCULATE ( [Total Sales], 'Product'[Color] IN { "Blue", "White", "Red" } )
-		formatString: #,0.00\ "€";-#,0.00\ "€";#,0.00\ "€"
+		formatString: #,0
 		displayFolder: Measures
 		lineageTag: f277aef0-7b22-4e95-b65b-9f4f220a0e05
 
@@ -110,9 +110,30 @@ table Sales
 			    KEEPFILTERS ( 'Product'[Color] = "Red" ),
 			    FILTER ( ALL ( 'Date'[Date] ), 'Date'[Date] <= MAX ( 'Date'[Date] ) )
 			)
-		formatString: 0
+		formatString: #,0
 		displayFolder: Measures
 		lineageTag: 3bb5ea3b-a328-475c-8218-e1ea074f5415
+
+	/// Calculates the customer retention rate by dividing the number of customers who made at least one sale from the start of the year up to the current visible date and the same period last year by the total number of customers who made at least one sale during the same period last year. A customer is considered retained if they have at least one sale in both periods.
+	measure 'Customer Retention %' = ```
+			VAR _dates =
+			    DATESYTD ( 'Date'[Date] )
+			VAR _currentCustomers =
+			    CALCULATETABLE ( SUMMARIZE ( 'Sales', 'Customer'[CustomerKey] ), _dates )
+			VAR _previousCustomers =
+			    CALCULATETABLE (
+			        SUMMARIZE ( 'Sales', 'Customer'[CustomerKey] ),
+			        DATEADD ( _dates, -1, YEAR )
+			    )
+			VAR _retainedCustomers =
+			    COUNTROWS ( INTERSECT ( _previousCustomers, _currentCustomers ) )
+			RETURN
+			    DIVIDE ( _retainedCustomers, COUNTROWS ( _previousCustomers ) )
+			
+			```
+		formatString: #,0.0%;-#,0.0%;#,0.0%
+		displayFolder: Measures
+		lineageTag: a24b7ea5-3bc8-43a8-a73b-00e0167e33fd
 
 	column 'Order Number'
 		dataType: int64
